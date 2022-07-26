@@ -107,16 +107,16 @@
         process(inputs, outputs, parameters) {
           var channel, i, j, k, len, output, ref;
           output = outputs[0];
-          // TODO: handle buffer better; for now, take the latest sample
-          if (parameters.playing[parameters.playing.length - 1] > 0.5 && !this.playing) {
-            this.play(parameters.fret[parameters.fret.length - 1]);
-          }
           if (currentFrame % 500 === 0) {
             console.log("playing", this.playing, parameters.playing[parameters.playing.length - 1]);
           }
           for (j = 0, len = output.length; j < len; j++) {
             channel = output[j];
             for (i = k = 0, ref = channel.length; (0 <= ref ? k <= ref : k >= ref); i = 0 <= ref ? ++k : --k) {
+              // TODO: this probably doesn't work with multiple channels
+              if (parameters.playing[i] > 0.5 && !this.playing) {
+                this.play(parameters.fret[i]);
+              }
               channel[i] = this.nextSample();
             }
           }
