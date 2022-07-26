@@ -50,6 +50,7 @@
       this.decay = (note_n / 80) + 0.1;
       this.setFrequency(getFrequency(note_n), note_n);
       this.node.parameters.get("fret").value = this.fret;
+      this.node.parameters.get("playing").value = 1;
     }
 
     setFrequency(freq) {}
@@ -65,12 +66,14 @@
     }
 
     release() {
-      return this.playing = false;
+      this.playing = false;
+      return this.node.parameters.get("playing").value = 0;
     }
 
     stop() {
       this.playing = false;
-      return this.started = false;
+      this.started = false;
+      return this.node.parameters.get("playing").value = 0;
     }
 
   };
@@ -91,14 +94,19 @@
           // to init some stuff like periodIndex
           this.setFrequency(this.base_freq);
           this.play(0);
+          this.decay = 0;
+          this.playing = false;
+          this.started = false;
         }
 
         process(inputs, outputs, parameters) {
           var channel, i, j, k, len, output, ref;
           output = outputs[0];
           if (parameters.playing > 0.5 && !this.playing) {
-            this.play(0);
+            // TODO: handle buffer better; for now, take the latest sample
+            this.play(parameters.fret[parameters.fret.length - 1]);
           }
+// console.log "playing", @playing, parameters.playing
           for (j = 0, len = output.length; j < len; j++) {
             channel = output[j];
             for (i = k = 0, ref = channel.length; (0 <= ref ? k <= ref : k >= ref); i = 0 <= ref ? ++k : --k) {
