@@ -173,6 +173,9 @@
         ++this.cumulativeIndex;
         this.decay *= this.playing ? 1 - PLAYING_DECAY : 1 - RELEASED_DECAY;
         // @decay = if @playing then (1 - PLAYING_DECAY) else (1 - RELEASED_DECAY)
+        if (!isFinite(this.current)) {
+          throw new Error(`@current is ${this.current}`);
+        }
         return this.current;
       }
 
