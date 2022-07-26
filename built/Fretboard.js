@@ -19,7 +19,6 @@
           }
           return results;
         })();
-        // new AudioWorkletNode(actx, "white-noise-processor", {processorOptions: {baseNote}})
         this.fret_scale = 1716;
         this.x = OSW;
         // @TODO: balance visual weight vertically

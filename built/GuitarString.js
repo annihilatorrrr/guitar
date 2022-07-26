@@ -14,16 +14,13 @@
       this.label = this.base_note_str[0];
       this.base_note_n = getNoteN(this.base_note_str);
       this.base_freq = getFrequency(this.base_note_n);
-      this.data = [0];
-      this.script_processor = actx.createScriptProcessor(1024, 1, 1);
-      this.script_processor.onaudioprocess = (e) => {
-        var i, j, ref;
-        this.data = e.outputBuffer.getChannelData(0);
-        for (i = j = 0, ref = this.data.length; (0 <= ref ? j <= ref : j >= ref); i = 0 <= ref ? ++j : --j) {
-          this.data[i] = this.getSampleData();
+      this.node = new AudioWorkletNode(actx, "white-noise-processor", {
+        processorOptions: {
+          baseNote: this.base_note_str
         }
-      };
-      this.script_processor.connect(pre);
+      });
+      this.node.connect(pre);
+      this.data = [0];
       this.started = false;
       this.playing = false;
       this.freq = this.base_freq;
@@ -107,10 +104,11 @@
   if (typeof registerProcessor !== "undefined" && registerProcessor !== null) {
     WhiteNoiseProcessor = class WhiteNoiseProcessor extends AudioWorkletProcessor {
       process(inputs, outputs, parameters) {
-        var channel, i, j, output, ref;
+        var channel, i, j, k, len, output, ref;
         output = outputs[0];
-        for (channel in output) {
-          for (i = j = 0, ref = channel.length; (0 <= ref ? j <= ref : j >= ref); i = 0 <= ref ? ++j : --j) {
+        for (j = 0, len = output.length; j < len; j++) {
+          channel = output[j];
+          for (i = k = 0, ref = channel.length; (0 <= ref ? k <= ref : k >= ref); i = 0 <= ref ? ++k : --k) {
             channel[i] = Math.random() * 2 - 1;
           }
         }

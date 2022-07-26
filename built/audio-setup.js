@@ -34,8 +34,6 @@
     return this.actx.resume();
   });
 
-  this.actx.audioWorklet.addModule("built/GuitarString.js");
-
   connect = function(...nodes) {
     var i, j, len, next, node, ref, ref1;
     for (i = j = 0, len = nodes.length; j < len; i = ++j) {
