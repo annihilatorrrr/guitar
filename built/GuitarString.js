@@ -117,6 +117,9 @@
               if (parameters.playing[i] > 0.5 && !this.playing) {
                 this.play(parameters.fret[i]);
               }
+              if (parameters.playing[i] < 0.5 && this.playing) {
+                this.playing = false;
+              }
               channel[i] = this.nextSample();
             }
           }
