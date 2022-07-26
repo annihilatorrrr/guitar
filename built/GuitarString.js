@@ -50,7 +50,8 @@
       this.decay = (note_n / 80) + 0.1;
       this.setFrequency(getFrequency(note_n), note_n);
       this.node.parameters.get("fret").value = this.fret;
-      this.node.parameters.get("playing").value = 1;
+      // @node.parameters.get("playing").value = 1
+      this.node.parameters.get("playing").setValueAtTime(1, actx.currentTime);
     }
 
     setFrequency(freq) {}
@@ -67,13 +68,17 @@
 
     release() {
       this.playing = false;
-      return this.node.parameters.get("playing").value = 0;
+      // @node.parameters.get("playing").value = 0
+      this.node.parameters.get("playing").setValueAtTime(0, actx.currentTime);
+      return console.log("released");
     }
 
     stop() {
       this.playing = false;
       this.started = false;
-      return this.node.parameters.get("playing").value = 0;
+      // @node.parameters.get("playing").value = 0
+      this.node.parameters.get("playing").setValueAtTime(0, actx.currentTime);
+      return console.log("stopped");
     }
 
   };
@@ -106,7 +111,9 @@
           if (parameters.playing[parameters.playing.length - 1] > 0.5 && !this.playing) {
             this.play(parameters.fret[parameters.fret.length - 1]);
           }
-// console.log "playing", @playing, parameters.playing
+          if (currentFrame % 500 === 0) {
+            console.log("playing", this.playing, parameters.playing[parameters.playing.length - 1]);
+          }
           for (j = 0, len = output.length; j < len; j++) {
             channel = output[j];
             for (i = k = 0, ref = channel.length; (0 <= ref ? k <= ref : k >= ref); i = 0 <= ref ? ++k : --k) {
@@ -195,7 +202,7 @@
         },
         {
           name: "playing",
-          defaultValue: 0.5,
+          defaultValue: 0,
           minValue: 0,
           maxValue: 1,
           automatable: true,
