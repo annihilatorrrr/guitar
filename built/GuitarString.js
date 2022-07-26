@@ -107,7 +107,9 @@
         this.playing = false;
         this.freq = this.base_freq;
         this.fret = 0;
+        // to init some stuff like periodIndex
         this.setFrequency(this.base_freq);
+        this.play(0);
       }
 
       process(inputs, outputs, parameters) {
